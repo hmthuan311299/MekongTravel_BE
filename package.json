@@ -1,0 +1,26 @@
+{
+  "name": "ct594_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmthuan311299/ct594_backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hmthuan311299/ct594_backend/issues"
+  },
+  "homepage": "https://github.com/hmthuan311299/ct594_backend#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "md5": "^2.3.0",
+    "pg": "^8.7.3"
+  }
+}
