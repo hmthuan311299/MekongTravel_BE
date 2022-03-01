@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 
 //import Router
 var memberRouter = require('./src/router/member.route')
+var provinceRoute = require('./src/router/province.route')
 
 
 app.get('/', (req, res) => {
@@ -14,6 +15,8 @@ app.get('/', (req, res) => {
 //member
 app.use('/member', memberRouter);
 
+//province
+app.use('/province', provinceRoute);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

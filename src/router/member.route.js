@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/member.controller')
+//upload file
 const multer  = require('multer')
 var dirName = "./src/public"
 const upload  = multer({ dest: dirName+ '/avatarMember' })
+
+
 router.get('/', controller.getMember)
 router.get('/:memberId', controller.getMemberById)
 router.post('/login', controller.loginMember)

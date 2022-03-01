@@ -4,7 +4,6 @@ var md5 = require('md5');
 var jwt = require('jsonwebtoken');
 const {responseMemberObject} = require('../helpers')
 const getMember = (req, res) =>{
-    console.log(md5('1234'))
     var currPage = (parseInt(req.query.currPage)*10) || 0;
     pool.query(model.readMember, [currPage], (err, result) => {
         if (err) {
@@ -37,9 +36,11 @@ const loginMember = (req, res) =>{
             var data = result.rows[0];
             var {memberid, membername} = data;
             var dataJWT ={
-                memberid,
-                membername
+                memberid: data.memberid,
+                membername: data.membername,
+                iat: data.memberid
             }
+            // var dataJWT ="thuan"
             const access_Token = jwt.sign(dataJWT, "DUNG_CHO_AI_BIET_NHA")
             res.json(responseMemberObject(200,'Đăng nhập thành công', result.rows[0], access_Token));
         }
