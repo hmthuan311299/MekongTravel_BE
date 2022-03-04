@@ -1,3 +1,4 @@
+
 const responseMemberObject = (status= 200, message = '', data= '', access_Token= '')=>{
     status,
     message,
@@ -22,7 +23,57 @@ const responseMemberObject = (status= 200, message = '', data= '', access_Token=
         "access_token": access_Token
 
         }
+}
+const responseSupporterObject = (status= 200, message = '', data= '', access_Token= '')=>{
+    status,
+    message,
+    data
+    if(!data){
+        return{
+            "status": status,
+            "message" : message,
+        }
     }
+    if(!access_Token){
+        return{
+            "status": status,
+            "message" : message,
+            "supporter" : data
+        }
+    }
+    return {
+        "status": status,
+        "message" : message,
+        "supporter" : data,
+        "access_token": access_Token
+
+        }
+}
+const responseAdminObject = (status= 200, message = '', data= '', access_Token= '')=>{
+    status,
+    message,
+    data
+    if(!data){
+        return{
+            "status": status,
+            "message" : message,
+        }
+    }
+    if(!access_Token){
+        return{
+            "status": status,
+            "message" : message,
+            "admin" : data
+        }
+    }
+    return {
+        "status": status,
+        "message" : message,
+        "admin" : data,
+        "access_token": access_Token
+
+        }
+}
 const responseProvinceObject = (status= 200, message = '', data= '')=>{
     status,
     message,
@@ -36,7 +87,7 @@ const responseProvinceObject = (status= 200, message = '', data= '')=>{
     return {
         "status": status,
         "message" : message,
-        "member" : data,
+        "province" : data,
     }
 }
 //Hàm viết hoa mỗi chữ đầu
@@ -47,4 +98,4 @@ const titleCase = (str)=>{
     });
     return result.join(' ');
 }
-module.exports = {responseMemberObject, responseProvinceObject, titleCase}
+module.exports = {responseSupporterObject, responseMemberObject, responseProvinceObject, responseAdminObject, titleCase}

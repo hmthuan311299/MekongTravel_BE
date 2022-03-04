@@ -29,7 +29,7 @@ const loginMember = (req, res) =>{
         if (err) {
             res.json(responseMemberObject(400,'Truy vấn thất bại'));
         } 
-        if(result.rowCount < 0){
+        if(result.rowCount == 0){
             res.json(responseMemberObject(400,'Tài khoản hoặc mật khẩu không chính xác'));
         }
         else{
@@ -47,12 +47,12 @@ const loginMember = (req, res) =>{
       })
 }
 const addMember = (req, res, result)=>{
-    var {memberEmail, memberPass, memberName, memberAddress, memberGender, memberDesc, memberBirthday, memberPhone} = req.body;
+    var {memberEmail, memberPass, memberName, memberAddress, memberGender, memberDesc, memberYearofBirth, memberPhone} = req.body;
     pool.query(model.checkEmailExist, [memberEmail], (err, result)=>{
         if(result.rowCount > 0)
             res.send(responseMemberObject(400,"Email này đã tồn tại trong hệ thống", ""))
         else{
-            pool.query(model.insertMember, [memberEmail, md5(memberPass), memberName, memberAddress, memberGender, memberDesc, memberBirthday, memberPhone], (error, results)=>{
+            pool.query(model.insertMember, [memberEmail, md5(memberPass), memberName, memberAddress, memberGender, memberDesc, memberYearofBirth, memberPhone], (error, results)=>{
                 if(error) throw error;
                 res.send(responseMemberObject(200,"Đăng ký tài khoản thành công"))
             })
@@ -61,10 +61,10 @@ const addMember = (req, res, result)=>{
 }
 const updateMember = (req, res, result)=>{
     var memberId = req.params.memberId;
-    var {memberName, memberAddress, memberGender, memberDesc, memberBirthday, memberPhone} = req.body;
+    var {memberName, memberAddress, memberGender, memberDesc, memberYearofBirth, memberPhone} = req.body;
     pool.query(model.readMemberById, [memberId], (err, result)=>{
         if(result.rowCount > 0){
-            pool.query(model.updateInforMember, [memberName, memberAddress, memberGender, memberDesc, memberBirthday, memberPhone, memberId], (error, results)=>{
+            pool.query(model.updateInforMember, [memberName, memberAddress, memberGender, memberDesc, memberYearofBirth, memberPhone, memberId], (error, results)=>{
                 res.send(responseMemberObject(200,"Cập nhật thông tin thành công"))
             })
         }
@@ -72,18 +72,17 @@ const updateMember = (req, res, result)=>{
             res.send(responseMemberObject(400,"Không tìm thấy người này trong hệ thống"))
     })
 }
-const uploadAvatar = (req, res, result)=>{
+const updateMemberHaveAvatar = (req, res, result)=>{
     var memberId = req.params.memberId;
-    console.log(req.file);
-    console.log(req.body)
-    const {productName} = req.body;
-    const {filename, path, size} = req.file
-    pool.query(model.uploadAvatarMember, [path, memberId], (err, result)=>{
+    var {memberName, memberAddress, memberGender, memberDesc, memberYearofBirth, memberPhone} = req.body;
+    var path = req.file.path;
+    
+    pool.query(model.uploadAvatarMember, [memberName, memberAddress, memberGender, memberDesc, memberYearofBirth, memberPhone, path, memberId], (err, result)=>{
         if(err){
-            res.send(responseMemberObject(400,"Đổi ảnh đại diện thất bại"))
+            res.send(responseMemberObject(400,"Đã có lỗi xảy ra"))
         }
         else
-            res.send(responseMemberObject(200,"Đổi ảnh đại diện thành công"))
+            res.send(responseMemberObject(200,"Cập nhật thành công"))
     })
 }
 const changePassMember = (req, res, result)=>{
@@ -112,4 +111,4 @@ const deleteMember = (req, res, result)=>{
     })
 }
 
-module.exports = {getMember, loginMember, getMemberById, addMember, updateMember, changePassMember, deleteMember, uploadAvatar};
+module.exports = {getMember, loginMember, getMemberById, addMember, updateMember, changePassMember, deleteMember, updateMemberHaveAvatar};

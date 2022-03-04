@@ -9,7 +9,17 @@ const getProvince = (req, res) =>{
         res.send(responseProvinceObject(200, noti_success, result.rows));
     })
 }
+const getProvinceById = (req, res) =>{
+    var {provinceId} = req.params;
+    pool.query(model.readProvinceById, [provinceId], (error, result)=>{
+        if(error || result.rowCount == 0){
+            res.json(responseProvinceObject(400,"Không tìm thấy tỉnh thành này trong hệ thống", ""));
+        }
+        else res.send(responseProvinceObject(200, noti_success, result.rows[0]));
+    })
+}
 const addProvince = (req, res)=>{
+    var path = req.file.path
     var {provinceTitle, provinceDesc} = req.body;
     var convertProvinceTitle = titleCase(provinceTitle.trim());
     pool.query(model.checkNameProvince, [convertProvinceTitle], (error, result)=>{
@@ -20,7 +30,7 @@ const addProvince = (req, res)=>{
             res.send(responseProvinceObject(400, 'Tỉnh thành này đã tồn tại trong hệ thống'));
         }
         else{
-            pool.query(model.addProvince, [convertProvinceTitle, provinceDesc], (error, result)=>{
+            pool.query(model.addProvince, [path, convertProvinceTitle, provinceDesc], (error, result)=>{
                 if(error) res.send(responseProvinceObject(400, noti_error));
                 res.send(responseProvinceObject(200, noti_success));
             })
@@ -29,6 +39,7 @@ const addProvince = (req, res)=>{
     })
 }
 const updateProvince = (req, res)=>{
+    var path = req.file.path;
     var provinceId = req.params.provinceId;
     pool.query(model.checkProvinceByID, [provinceId], (error, result)=>{
         if(error) res.send(responseProvinceObject(400, noti_error));
@@ -38,7 +49,7 @@ const updateProvince = (req, res)=>{
         else{
             var {provinceTitle, provinceDesc} = req.body;
             var convertProvinceTitle = titleCase(provinceTitle.trim());
-            pool.query(model.updateProvince, [convertProvinceTitle, provinceDesc, provinceId],(error, result)=>{
+            pool.query(model.updateProvince, [path, convertProvinceTitle, provinceDesc, provinceId],(error, result)=>{
                 if(error){
                     res.send(responseProvinceObject(400, noti_error));
                 }
@@ -64,7 +75,7 @@ const deleteProvince = (req, res)=>{
         }
     })
 }
-module.exports = {getProvince, addProvince, updateProvince, deleteProvince}
+module.exports = {getProvince, addProvince, updateProvince, deleteProvince, getProvinceById}
 
 
 
