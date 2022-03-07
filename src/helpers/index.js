@@ -1,4 +1,3 @@
-
 const responseMemberObject = (status= 200, message = '', data= '', access_Token= '')=>{
     status,
     message,
@@ -90,6 +89,38 @@ const responseProvinceObject = (status= 200, message = '', data= '')=>{
         "province" : data,
     }
 }
+const responseIMGTouristObject = (status= 200, message = '', data= '')=>{
+    status,
+    message,
+    data
+    if(!data){
+        return{
+            "status": status,
+            "message" : message,
+        }
+    }
+    return {
+        "status": status,
+        "message" : message,
+        "image" : data,
+    }
+}
+const responseTouristObject = (status= 200, message = '', data= '')=>{
+    status,
+    message,
+    data
+    if(!data){
+        return{
+            "status": status,
+            "message" : message,
+        }
+    }
+    return {
+        "status": status,
+        "message" : message,
+        "touristAttraction" : data,
+    }
+}
 //Hàm viết hoa mỗi chữ đầu
 const titleCase = (str)=>{
     var convertToArray = str.toLowerCase().split(' ');
@@ -98,4 +129,12 @@ const titleCase = (str)=>{
     });
     return result.join(' ');
 }
-module.exports = {responseSupporterObject, responseMemberObject, responseProvinceObject, responseAdminObject, titleCase}
+module.exports = {  
+    responseSupporterObject, 
+    responseMemberObject, 
+    responseProvinceObject, 
+    responseAdminObject, 
+    titleCase,
+    responseTouristObject,
+    responseIMGTouristObject
+}

@@ -9,6 +9,8 @@ var memberRouter = require('./src/router/member.route')
 var provinceRoute = require('./src/router/province.route')
 var adminRouter = require('./src/router/admin.route')
 var supporterRouter = require('./src/router/supporter.route')
+var touristAttractionRouter = require('./src/router/touristAttraction.route')
+var imageRouter = require('./src/router/imgTouristAttraction.route')
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -36,7 +38,9 @@ app.use('/member', memberRouter);
 app.use('/supporter', supporterRouter);
 //province
 app.use('/province', provinceRoute);
-
+//touristAttraction
+app.use('/touristAttraction', touristAttractionRouter)
+app.use('/image', imageRouter)
 app.use(express.static(__dirname))
 
 app.listen(port, () => {
