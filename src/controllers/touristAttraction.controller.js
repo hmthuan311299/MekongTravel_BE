@@ -1,6 +1,7 @@
 const pool = require('../database');
 const model = require('../models/touristAttraction.model');
-const {responseTouristObject, titleCase} = require('../helpers');
+const {responseTouristObject, titleCase, remove_vietnamese_accents} = require('../helpers');
+const { rows } = require('pg/lib/defaults');
 const noti_success = 'Kết nối thành công';
 const noti_error = 'Đã có lỗi xảy ra';
 
@@ -16,7 +17,7 @@ const getTouristAttactionByProvinceId = (req, res) =>{
         if(error || result.rowCount == 0){
             res.send(responseTouristObject(200, "Không tìm thấy địa điểm này trong hệ thống"));
         }
-        res.send(responseTouristObject(200, noti_success, result.rows[0]));
+        res.send(responseTouristObject(200, noti_success, result.rows));
     })
 }
 const getTouristAttactionById = (req, res) =>{
@@ -26,6 +27,18 @@ const getTouristAttactionById = (req, res) =>{
             res.send(responseTouristObject(200, "Không tìm thấy địa điểm này trong hệ thống"));
         }
         else res.send(responseTouristObject(200, noti_success, result.rows[0]));
+    })
+}
+const getTouristAttactionBySearch = (req, res) =>{
+    var {valueSearch} = req.query;
+    var valueSearch2 = remove_vietnamese_accents(valueSearch);
+    console.log(valueSearch2)
+    //var searchTouristAttraction = `Select distinct a.*, b.provinceTitle FROM touristAttraction a, province b where a.provinceid = b.provinceid and tourTitle ILIKE '%${valueSearch}%'`
+    pool.query(model.searchTouristAttraction, [`%${valueSearch}%`,`%${valueSearch2}%`, `%${valueSearch}%`,`%${valueSearch2}%`], (error, result)=>{
+        if(error || result.rowCount == 0){
+            res.send(responseTouristObject(200, "Không tìm thấy địa điểm này trong hệ thống"));
+        }
+        else res.send(responseTouristObject(200, noti_success, result.rows));
     })
 }
 const addTouristAttaction = (req, res)=>{
@@ -113,5 +126,6 @@ module.exports = {
     updateTouristAttaction,
     updateTouristAttactionHavePicture,
     deleteTouristAttaction,
-    getTouristAttactionById
+    getTouristAttactionById,
+    getTouristAttactionBySearch
 }

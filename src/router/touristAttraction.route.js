@@ -6,6 +6,7 @@ var dirName = "./src/public"
 const upload  = multer({ dest: dirName+ '/tourPicture'})
 
 router.get('/', controller.getAllTouristAttaction)
+router.get('/search', controller.getTouristAttactionBySearch)
 router.get('/getListTAByProvinceId/:provinceId', controller.getTouristAttactionByProvinceId)
 router.get('/getListTAById/:tourId', controller.getTouristAttactionById)
 router.post('/addTouristAttraction', upload.single('avatar'), controller.addTouristAttaction)
