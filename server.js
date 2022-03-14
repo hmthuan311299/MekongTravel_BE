@@ -4,6 +4,8 @@ const port = process.env.port || 3000;
 app.use(express.json());
 var jwt = require('jsonwebtoken');
 var path = require('path');
+// var dirName = "./src/public"
+app.use(express.static(__dirname))
 //import Router
 var memberRouter = require('./src/router/member.route')
 var provinceRoute = require('./src/router/province.route')
@@ -14,18 +16,12 @@ var imageRouter = require('./src/router/imgTouristAttraction.route')
 var commentRouter = require('./src/router/comment.route')
 var evaluateRouter = require('./src/router/evaluate.route')
 var saveTARouter = require('./src/router/saveTouristAttraction')
-app.use(function (req, res, next) {
-    // Website you wish to allow to connect
+var recommededPlace = require('./src/router/recommendedPlace.route')
+app.use(function (req, res, next) { 
     res.setHeader('Access-Control-Allow-Origin', '*');
-    //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
-    // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    // Request headers you wish to allow
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', true);
-    // Pass to next layer of middleware
     next();
 });
 
@@ -47,10 +43,7 @@ app.use('/image', imageRouter)
 app.use('/comment', commentRouter)
 app.use('/evaluate', evaluateRouter)
 app.use('/saveTA', saveTARouter)
-
-
-app.use(express.static(__dirname))
-
+app.use('/recommendedPlace', recommededPlace)
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

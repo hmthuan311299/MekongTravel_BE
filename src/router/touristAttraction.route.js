@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/touristAttraction.controller');
 const multer  = require('multer')
-var dirName = "./src/public"
-const upload  = multer({ dest: dirName+ '/tourPicture'})
+var dirName = "src/public"
+const upload  = multer({ dest: dirName + '/tourPicture'})
 
 router.get('/', controller.getAllTouristAttaction)
 router.get('/search', controller.getTouristAttactionBySearch)

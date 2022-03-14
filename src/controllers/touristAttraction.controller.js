@@ -1,10 +1,9 @@
 const pool = require('../database');
 const model = require('../models/touristAttraction.model');
 const {responseTouristObject, titleCase, remove_vietnamese_accents} = require('../helpers');
-const { rows } = require('pg/lib/defaults');
 const noti_success = 'Kết nối thành công';
 const noti_error = 'Đã có lỗi xảy ra';
-
+var appRoot = require('app-root-path');
 const getAllTouristAttaction = (req, res) =>{
     pool.query(model.readAllTouristAttraction, (error, result)=>{
         if(error) throw error;
@@ -13,20 +12,29 @@ const getAllTouristAttaction = (req, res) =>{
 }
 const getTouristAttactionByProvinceId = (req, res) =>{
     var {provinceId} = req.params;
-    pool.query(model.readTouristAttractionByProvince, [provinceId], (error, result)=>{
-        if(error || result.rowCount == 0){
-            res.send(responseTouristObject(200, "Không tìm thấy địa điểm này trong hệ thống"));
-        }
-        res.send(responseTouristObject(200, noti_success, result.rows));
-    })
+    if(provinceId){
+        pool.query(model.readTouristAttractionByProvince, [provinceId], (error, result)=>{
+            if(error){
+                res.send(responseTouristObject(400, noti_error));
+            }
+            else 
+                res.send(responseTouristObject(200, "Truy vấn thành công", result.rows));
+        })
+    }else{
+        res.send(responseTouristObject(400, noti_error));
+    }
 }
 const getTouristAttactionById = (req, res) =>{
     var {tourId} = req.params;
     pool.query(model.readTouristAttractionById, [tourId], (error, result)=>{
-        if(error || result.rowCount == 0){
-            res.send(responseTouristObject(200, "Không tìm thấy địa điểm này trong hệ thống"));
+        if(error){
+            res.send(responseTouristObject(400, noti_error));
         }
-        else res.send(responseTouristObject(200, noti_success, result.rows[0]));
+        if(rowCount == 0){
+            res.send(responseTouristObject(200, "Địa điểm này không tồn tại trong hệ thống", []));
+        }
+        else 
+            res.send(responseTouristObject(200, "Truy vấn thành công", result.rows[0]));
     })
 }
 const getTouristAttactionBySearch = (req, res) =>{
@@ -42,7 +50,8 @@ const getTouristAttactionBySearch = (req, res) =>{
     })
 }
 const addTouristAttaction = (req, res)=>{
-    var path = req.file.path
+    var p = req.file.path
+    var path = req.file.path;
     console.log(path)
     var {tourId, tourTitle, tourDesc, tourAddress, tourMap, tourLinkVideo, provinceId} = req.body;
     var convertTourTitle = titleCase(tourTitle.trim());
@@ -83,7 +92,8 @@ const updateTouristAttaction = (req, res)=>{
     })
 }
 const updateTouristAttactionHavePicture = (req, res)=>{
-    var path = req.file.path;
+    var path = appRoot+ req.file.path;
+    console.log(path)
     var tourId = req.params.tourId;
     pool.query(model.checkTouristByID, [tourId], (error, result)=>{
         if(error) res.send(responseTouristObject(400, noti_error));

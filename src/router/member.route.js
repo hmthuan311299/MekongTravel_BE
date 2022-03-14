@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/member.controller')
 //upload file
+var appRoot = require('app-root-path');
 const multer  = require('multer')
 var dirName = "./src/public"
 const upload  = multer({ dest: dirName+ '/avatarMember' })
