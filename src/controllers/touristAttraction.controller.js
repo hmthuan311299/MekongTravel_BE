@@ -26,16 +26,20 @@ const getTouristAttactionByProvinceId = (req, res) =>{
 }
 const getTouristAttactionById = (req, res) =>{
     var {tourId} = req.params;
-    pool.query(model.readTouristAttractionById, [tourId], (error, result)=>{
-        if(error){
-            res.send(responseTouristObject(400, noti_error));
-        }
-        if(rowCount == 0){
-            res.send(responseTouristObject(200, "Địa điểm này không tồn tại trong hệ thống", []));
-        }
-        else 
-            res.send(responseTouristObject(200, "Truy vấn thành công", result.rows[0]));
-    })
+    if(tourId){
+        pool.query(model.readTouristAttractionById, [tourId], (error, result)=>{
+            if(error){
+                res.send(responseTouristObject(400, noti_error));
+            }
+            if(res.rowCount == 0){
+                res.send(responseTouristObject(200, "Địa điểm này không tồn tại trong hệ thống", []));
+            }
+            else 
+                res.send(responseTouristObject(200, "Truy vấn thành công", result.rows[0]));
+        })
+    }else{
+        res.send(responseTouristObject(400, noti_error));
+    }
 }
 const getTouristAttactionBySearch = (req, res) =>{
     var {valueSearch} = req.query;
