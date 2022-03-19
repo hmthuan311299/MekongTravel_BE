@@ -169,7 +169,22 @@ const responseSaveTAObject = (status= 200, message = '', data= '')=>{
         "saveTA": data,
     }
 }
-
+const responseRecommendedObject = (status= 200, message = '', data= '')=>{
+    status,
+    message,
+    data
+    if(!data){
+        return{
+            "status": status,
+            "message" : message,
+        }
+    }
+    return {
+        "status": status,
+        "message" : message,
+        "recommended" : data,
+    }
+}
 //Hàm viết hoa mỗi chữ đầu
 const titleCase = (str)=>{
     var convertToArray = str.toLowerCase().split(' ');
@@ -241,5 +256,6 @@ module.exports = {
     responseCommentObject,
     responseEvaluateObject,
     responseSaveTAObject,
-    remove_vietnamese_accents
+    remove_vietnamese_accents,
+    responseRecommendedObject
 }

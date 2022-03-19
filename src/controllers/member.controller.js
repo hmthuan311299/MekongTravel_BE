@@ -86,17 +86,28 @@ const updateMemberHaveAvatar = (req, res, result)=>{
     })
 }
 const changePassMember = (req, res, result)=>{
-    var memberId = req.params.memberId;
-    var {memberPass} = req.body;
-    pool.query(model.readMemberById, [memberId], (err, result)=>{
-        if(result.rowCount > 0){
-            pool.query(model.changePassMember, [md5(memberPass), memberId], (error, results)=>{
-                res.send(responseMemberObject(200,"Cập nhật mật khẩu thành công"))
-            })
-        }
-        else    
-            res.send(responseMemberObject(400,"Không tìm thấy người này trong hệ thống"))
-    })
+    var {oldPass, newPass, memberId} = req.body;
+    if(oldPass, newPass, parseInt(memberId)){
+        pool.query(model.readMemberById, [memberId], (err, result)=>{
+            if(result.rowCount > 0){
+                pool.query(model.checkUserPassWord, [md5(oldPass), memberId], (err, result)=>{
+                    if(result.rowCount > 0){
+                        pool.query(model.changePassMember, [md5(newPass), memberId], (err, result)=>{
+                            if(result.rowCount > 0){
+                                res.send(responseMemberObject(200,"Thay đổi mật khẩu thành công"))
+                            }
+                            else res.send(responseMemberObject(400,"Đã có lỗi xảy ra"))
+                        })
+                    }
+                    else res.send(responseMemberObject(400,"Mật khẩu không hợp lệ"))
+                })
+            }
+            else res.send(responseMemberObject(400,"Không tìm thấy người này trong hệ thống"))
+        })
+
+    }else{
+
+    }
 }
 const deleteMember = (req, res, result)=>{
     var memberId = req.params.memberId;
@@ -110,5 +121,4 @@ const deleteMember = (req, res, result)=>{
             res.send(responseMemberObject(400,"Không tìm thấy người này trong hệ thống"));
     })
 }
-
 module.exports = {getMember, loginMember, getMemberById, addMember, updateMember, changePassMember, deleteMember, updateMemberHaveAvatar};

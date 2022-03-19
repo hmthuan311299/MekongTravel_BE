@@ -30,15 +30,22 @@ const updateEvaluate = (req, res, result)=>{
 const checkEvaluate = (req, res)=>{
     var {memberId, tourId} = req.query;
     console.log(memberId, tourId);
-    pool.query(model.checkEvaluate, [memberId, tourId], (error, result)=>{
-        if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
-        if(result.rowCount > 0){
-            res.send(responseEvaluateObject(200,"Bạn đã đánh giá địa điểm này", "true"))
-        }
-        else{
-            res.send(responseEvaluateObject(200,"Đánh giá địa điểm này", "false"))
-        }   
-    })
+    if(memberId){
+        pool.query(model.checkEvaluate, [memberId, tourId], (error, result)=>{
+            if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
+            if(result.rowCount){
+                res.send(responseEvaluateObject(200,"Bạn đã đánh giá địa điểm này", "true"))
+            }
+            else{
+                res.send(responseEvaluateObject(200,"Đánh giá địa điểm này", "false"))
+            }   
+        })
+    }
+    else{
+        res.json(responseEvaluateObject(400,'Truy vấn thất bại'));
+    }
+    
+    
 }
 const deleteEvaluate = (req, res, result)=>{
     var {memberId, tourId} = req.body;

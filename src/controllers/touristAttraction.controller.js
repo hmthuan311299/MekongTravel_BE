@@ -44,7 +44,6 @@ const getTouristAttactionById = (req, res) =>{
 const getTouristAttactionBySearch = (req, res) =>{
     var {valueSearch} = req.query;
     var valueSearch2 = remove_vietnamese_accents(valueSearch);
-    console.log(valueSearch2)
     //var searchTouristAttraction = `Select distinct a.*, b.provinceTitle FROM touristAttraction a, province b where a.provinceid = b.provinceid and tourTitle ILIKE '%${valueSearch}%'`
     pool.query(model.searchTouristAttraction, [`%${valueSearch}%`,`%${valueSearch2}%`, `%${valueSearch}%`,`%${valueSearch2}%`], (error, result)=>{
         if(error || result.rowCount == 0){

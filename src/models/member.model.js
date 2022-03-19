@@ -6,6 +6,7 @@ var checkEmailExist     = "SELECT * FROM member WHERE memberEmail ILIKE $1"
 var insertMember        = "INSERT INTO member(memberEmail, memberPass, memberName, memberAddress, memberGender, memberDesc, memberYearofBirth, memberPhone) values($1, $2, $3, $4, $5, $6, $7, $8)"
 var updateInforMember   = "UPDATE member SET membername = $1, memberAddress=$2, memberGender=$3, memberdesc=$4, memberYearofBirth=$5, memberphone=$6 WHERE memberID = $7";
 var uploadAvatarMember  = "UPDATE member SET membername = $1, memberAddress=$2, memberGender=$3, memberdesc=$4, memberYearofBirth=$5, memberphone=$6, memberAvatar = $7 WHERE memberID = $8";
+var checkUserPassWord   = "Select * from member where memberpass = $1 and memberID = $2";
 var changePassMember    = "UPDATE member SET memberpass = $1 WHERE memberID = $2";
 var deleteMember        = "DELETE FROM member WHERE memberID = $1";
 
@@ -19,5 +20,6 @@ module.exports = {
     deleteMember,
     updateInforMember,
     changePassMember,
-    uploadAvatarMember
+    uploadAvatarMember,
+    checkUserPassWord
 }

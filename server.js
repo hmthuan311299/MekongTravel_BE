@@ -15,8 +15,9 @@ var touristAttractionRouter = require('./src/router/touristAttraction.route')
 var imageRouter = require('./src/router/imgTouristAttraction.route')
 var commentRouter = require('./src/router/comment.route')
 var evaluateRouter = require('./src/router/evaluate.route')
-var saveTARouter = require('./src/router/saveTouristAttraction')
+var saveTARouter = require('./src/router/saveTourist.route')
 var recommededPlace = require('./src/router/recommendedPlace.route')
+var imgRecommeded = require('./src/router/imgRecommended')
 app.use(function (req, res, next) { 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -44,6 +45,7 @@ app.use('/comment', commentRouter)
 app.use('/evaluate', evaluateRouter)
 app.use('/saveTA', saveTARouter)
 app.use('/recommendedPlace', recommededPlace)
+app.use('/imgRecommended', imgRecommeded)
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

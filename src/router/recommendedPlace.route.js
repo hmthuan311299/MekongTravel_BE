@@ -6,7 +6,10 @@ var dirName = "src/public"
 const upload  = multer({ dest: dirName + '/tourPicture'})
 
 router.get('/', controller.getAllRecomendedPlace)
+router.get('/approvedListByMemberId', controller.getApprovedListByMemberId)
+router.get('/unapprovedListByMemberId', controller.getUnapprovedListByMemberId)
+router.get('/', controller.getAllRecomendedPlace)
 router.get('/getById/:recommendId', controller.getRecomendedPlaceById)
-router.post('/add', upload.single('avatar'), controller.addRecomendedPlace)
+router.post('/add', upload.single('avatar'), controller.addRecommendedPlace)
 router.delete('/delete/:recommendId', controller.deleteRecomendedPlace)
 module.exports = router;

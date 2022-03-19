@@ -12,7 +12,7 @@ router.get('/:memberId', controller.getMemberById)
 router.post('/login', controller.loginMember)
 router.post('/sign-up', controller.addMember)
 router.put('/:memberId/update', controller.updateMember)
-router.put('/:memberId/changePass', controller.changePassMember)
+router.put('/changePassword', controller.changePassMember)
 router.delete('/:memberId/delete', controller.deleteMember)
 router.put('/:memberId/updateHaveAvatar', upload.single('avatar'), controller.updateMemberHaveAvatar)
 module.exports = router;
