@@ -185,6 +185,22 @@ const responseRecommendedObject = (status= 200, message = '', data= '')=>{
         "recommended" : data,
     }
 }
+const responseStatisticObject = (status= 200, message = '', data= '')=>{
+    status,
+    message,
+    data
+    if(!data){
+        return{
+            "status": status,
+            "message" : message,
+        }
+    }
+    return {
+        "status": status,
+        "message" : message,
+        "statistic" : data,
+    }
+}
 //Hàm viết hoa mỗi chữ đầu
 const titleCase = (str)=>{
     var convertToArray = str.toLowerCase().split(' ');
@@ -257,5 +273,6 @@ module.exports = {
     responseEvaluateObject,
     responseSaveTAObject,
     remove_vietnamese_accents,
-    responseRecommendedObject
+    responseRecommendedObject,
+    responseStatisticObject
 }

@@ -7,8 +7,9 @@ var checkTouristByID       = "SELECT * FROM touristAttraction where tourId = $1"
 var updateTouristAtraction = "UPDATE touristAttraction SET tourTitle = $1, tourDesc=$2, tourAddress=$3, tourMap=$4, tourLinkVideo=$5, provinceId= $6 WHERE tourid = $7";
 var updateTouristAtractionHavePicture = "UPDATE touristAttraction SET tourTitle = $1, tourDesc=$2, tourAddress=$3, tourMap=$4, tourLinkVideo=$5, provinceId= $6, tourPicture = $7 WHERE tourid = $8";
 var deleteTouristAtraction = "DELETE FROM touristAttraction WHERE tourID = $1";
-var searchTouristAttraction = "Select distinct a.*, b.provinceTitle FROM touristAttraction a, province b where a.provinceid = b.provinceid and tourTitle ILIKE $1 or tourTitle ILIKE $2 or provinceTitle ILIKE $3 or provinceTitle ILIKE $4"
-// 
+// var searchTouristAttraction = "Select distinct a.*, b.provinceTitle FROM touristAttraction a, province b where a.provinceid = b.provinceid and tourTitle ILIKE $1 or tourTitle ILIKE $2 or provinceTitle ILIKE $3 or provinceTitle ILIKE $4"
+var searchTouristAttraction = "Select distinct a.*, b.provinceTitle FROM touristAttraction a, province b where a.provinceid = b.provinceid and tourTitle ILIKE $1 or provinceTitle ILIKE $2"
+
 module.exports = {
     readAllTouristAttraction,
     readTouristAttractionByProvince,

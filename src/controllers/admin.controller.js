@@ -35,17 +35,33 @@ const loginAdmin = (req, res) =>{
       })
 }
 const updateAdmin = (req, res)=>{
-    var {adminEmail, adminName, adminAddress} = req.body;
-    pool.query(model.updateAdmin, [adminEmail, adminName, adminAddress], ()=>{
-        res.send(responseAdminObject(200,"Cập nhật thông tin thành công"))
-    })
+    var {adminEmail, adminName} = req.body;
+    if(adminEmail, adminName){
+        pool.query(model.updateAdmin, [adminEmail, adminName], ()=>{
+            res.send(responseAdminObject(200,"Cập nhật thông tin thành công"))
+        })
+    }else{
+        res.send(responseAdminObject(400,"Tham số truyền vào chưa đúng"))
+    }
+   
 }
-
 const changePassAdmin = (req, res)=>{
-    var {adminPass} = req.body;
-    pool.query(model.changePassAdmin, [md5(adminPass)], ()=>{
-        res.send(responseAdminObject(200,"Cập nhật mật khẩu thành công"))
-    })
+    var {oldPass, newPass} = req.body;
+    if(oldPass, newPass){
+        pool.query(model.checkPassword, [md5(oldPass)], (err, result)=>{
+            if(result.rowCount > 0){
+                pool.query(model.changePassword, [md5(newPass)], (err, result)=>{
+                    if(result.rowCount > 0){
+                        res.send(responseAdminObject(200,"Thay đổi mật khẩu thành công"))
+                    }
+                    else res.send(responseAdminObject(400,"Đã có lỗi xảy ra"))
+                })
+            }
+            else res.send(responseAdminObject(400,"Mật khẩu cũ chưa đúng"))
+        })
+    }else{
+        res.send(responseAdminObject(400,"Tham số truyền vào chưa đúng"))
+    }
 }
 
 module.exports = {showAdmin, loginAdmin, updateAdmin, changePassAdmin};

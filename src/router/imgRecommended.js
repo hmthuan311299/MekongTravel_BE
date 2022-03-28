@@ -5,7 +5,7 @@ const multer  = require('multer')
 var dirName = "./src/public"
 const upload  = multer({ dest: dirName+ '/imgTourist'})
 
-router.get('/get/:recommendId', controller.getImageByRecommendId)
+router.get('/:recommendId', controller.getImageByRecommendId)
 router.post('/add', upload.array('photos', 10), controller.addImageRecommended)
 router.delete('/delete/:id', controller.deleteById)
 

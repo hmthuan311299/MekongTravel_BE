@@ -21,41 +21,53 @@ const getProvinceById = (req, res) =>{
 const addProvince = (req, res)=>{
     var path = req.file.path
     var {provinceTitle, provinceDesc} = req.body;
-    var convertProvinceTitle = titleCase(provinceTitle.trim());
-    pool.query(model.checkNameProvince, [convertProvinceTitle], (error, result)=>{
-        if(error){
-            res.send(responseProvinceObject(400, noti_error));
-        }
-        if(result.rowCount > 0){
-            res.send(responseProvinceObject(400, 'Tỉnh thành này đã tồn tại trong hệ thống'));
-        }
-        else{
-            pool.query(model.addProvince, [path, convertProvinceTitle, provinceDesc], (error, result)=>{
-                if(error) res.send(responseProvinceObject(400, noti_error));
-                res.send(responseProvinceObject(200, noti_success));
-            })
-            
-        }
-    })
+    console.log(provinceTitle, provinceDesc)
+    if(provinceTitle, provinceDesc){
+        var convertProvinceTitle = titleCase(provinceTitle.trim());
+        pool.query(model.checkNameProvince, [convertProvinceTitle], (error, result)=>{
+            if(error){
+                res.send(responseProvinceObject(400, noti_error));
+            }
+            if(result.rowCount > 0){
+                res.send(responseProvinceObject(400, 'Tỉnh thành này đã tồn tại trong hệ thống'));
+            }
+            else{
+                pool.query(model.addProvince, [path, convertProvinceTitle, provinceDesc], (error, result)=>{
+                    if(error) res.send(responseProvinceObject(400, noti_error));
+                    res.send(responseProvinceObject(200, "Thêm thành công"));
+                })
+            }
+        })
+    }else{
+        res.send(responseProvinceObject(400, "Tham số truyền vào chưa đúng"));
+    }
+    
 }
 const updateProvince = (req, res)=>{
     var provinceId = req.params.provinceId;
-    pool.query(model.checkProvinceByID, [provinceId], (error, result)=>{
-        if(error) res.send(responseProvinceObject(400, noti_error));
-        if(result.rowCount == 0){
-            res.send(responseProvinceObject(400, "Không tìm thấy Tỉnh Thành này"));
-        }
-        else{
-            var {provinceTitle, provinceDesc} = req.body;
-            var convertProvinceTitle = titleCase(provinceTitle.trim());
-            pool.query(model.updateProvince, [convertProvinceTitle, provinceDesc, provinceId],(error, result)=>{
-                if(error){
-                    res.send(responseProvinceObject(400, noti_error));
+    if(parseInt(provinceId)){
+        pool.query(model.checkProvinceByID, [provinceId], (error, result)=>{
+            if(error) res.send(responseProvinceObject(400, noti_error));
+            if(result.rowCount == 0){
+                res.send(responseProvinceObject(400, "Không tìm thấy Tỉnh Thành này"));
+            }
+            else{
+                var {provinceTitle, provinceDesc} = req.body;
+                if(provinceTitle, provinceDesc){
+                    var convertProvinceTitle = titleCase(provinceTitle.trim());
+                    pool.query(model.updateProvince, [convertProvinceTitle, provinceDesc, provinceId],(error, result)=>{
+                        if(error){
+                            res.send(responseProvinceObject(400, noti_error));
+                        }
+                        res.send(responseProvinceObject(200, "Cập nhật thành công"));
+                    })
                 }
-                res.send(responseProvinceObject(200, "Cập nhật thành công"));
-            })
-        }
-    })
+            }
+        })
+    }else{
+        res.send(responseProvinceObject(400, "Tham số truyền vào chưa đúng"));
+    }
+    
 }
 const updateProvinceHavePicture = (req, res)=>{
     var path = req.file.path;
@@ -79,20 +91,22 @@ const updateProvinceHavePicture = (req, res)=>{
 }
 const deleteProvince = (req, res)=>{
     var provinceId = req.params.provinceId;
-    pool.query(model.checkProvinceByID, [provinceId], (error, result)=>{
-        if(error) res.send(responseProvinceObject(400, noti_error));
-        if(result.rowCount == 0){
-            res.send(responseProvinceObject(400, "Không tìm thấy Tỉnh Thành này"));
-        }
-        else{
-            pool.query(model.deleteProvince, [provinceId],(error, result)=>{
-                if(error){
-                    res.send(responseProvinceObject(400, noti_error));
-                }
-                res.send(responseProvinceObject(200, "Xóa thành công"));
-            })
-        }
-    })
+    if(parseInt(provinceId)){
+        pool.query(model.checkProvinceByID, [provinceId], (error, result)=>{
+            if(error) res.send(responseProvinceObject(400, noti_error));
+            if(result.rowCount == 0){
+                res.send(responseProvinceObject(400, "Không tìm thấy Tỉnh Thành này"));
+            }
+            else{
+                pool.query(model.deleteProvince, [provinceId],(error, result)=>{
+                    if(error){
+                        res.send(responseProvinceObject(400, noti_error));
+                    }
+                    res.send(responseProvinceObject(200, "Xóa thành công"));
+                })
+            }
+        })
+    }
 }
 module.exports = {getProvince, addProvince, updateProvince, deleteProvince, getProvinceById, updateProvinceHavePicture}
 

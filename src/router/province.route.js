@@ -7,8 +7,8 @@ const upload  = multer({ dest: dirName+ '/avatarProvince'})
 
 router.get('/', controller.getProvince)
 router.get('/:provinceId', controller.getProvinceById)
-router.post('/addProvince', upload.single('avatar'), controller.addProvince)
-router.put('/updateProvince/:provinceId', controller.updateProvince)
-router.put('/updateProvinceHavePicture/:provinceId',upload.single('avatar'), controller.updateProvinceHavePicture)
-router.delete('/deleteProvince/:provinceId', controller.deleteProvince)
+router.post('/add', upload.single('avatar'), controller.addProvince)
+router.put('/update/:provinceId', controller.updateProvince)
+router.put('/updateHavePicture/:provinceId', upload.single('avatar'), controller.updateProvinceHavePicture)
+router.delete('/delete/:provinceId', controller.deleteProvince)
 module.exports = router;

@@ -44,57 +44,103 @@ const loginSupporter = (req, res) =>{
       })
 }
 const addSupporter = (req, res, result)=>{
-    var {suppEmail, suppPass, suppName, suppAddress, suppGender, suppYearofBirth, suppPhone} = req.body;
-    pool.query(model.checkEmailExist, [suppEmail], (err, result)=>{
-        if(result.rowCount > 0)
-            res.send(responseSupporterObject(400,"Email này đã tồn tại trong hệ thống", ""))
-        else{
-            pool.query(model.insertSupporter, [suppEmail, md5(suppPass), suppName, suppAddress, suppGender, suppYearofBirth, suppPhone], (error, results)=>{
-                if(error) throw error;
-                res.send(responseSupporterObject(200,"Đăng ký tài khoản thành công"))
-            })
-        }
-    })
+    var {suppEmail, suppPass, suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone} = req.body;
+    console.log(suppEmail, suppPass, suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone)
+    if(suppEmail && suppPass && suppName && suppAddress && suppGender && suppYearOfBirth){
+        pool.query(model.checkEmailExist, [suppEmail], (err, result)=>{
+            if(result.rowCount > 0)
+                res.send(responseSupporterObject(400,"Email này đã tồn tại trong hệ thống", ""))
+            else{
+                pool.query(model.insertSupporter, [suppEmail, md5(suppPass), suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone], (error, results)=>{
+                    if(error) throw error;
+                    res.send(responseSupporterObject(200,"Đăng ký tài khoản thành công"))
+                })
+            }
+        })
+    }else{
+        res.send(responseSupporterObject(400,"Đã có lỗi xảy ra"))
+    }
+    
 }
 const updateSupporter = (req, res, result)=>{
     var suppId = req.params.suppId;
-    var {suppName, suppAddress, suppGender, suppYearofBirth, suppPhone} = req.body;
-    pool.query(model.readSupporterById, [suppId], (err, result)=>{
-        if(result.rowCount > 0){
-            pool.query(model.updateInforSupporter, [suppName, suppAddress, suppGender, suppYearofBirth, suppPhone, suppId], (error, result)=>{
-                if(error) res.send(responseSupporterObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
-                res.send(responseSupporterObject(200,"Cập nhật thông tin thành công"))
-            })
-        }
-        else    
-            res.send(responseSupporterObject(400,"Không tìm thấy người này trong hệ thống"))
-    })
-}
+    var {suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone} = req.body;
+    console.log(suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone)
+    
+    if(suppName && suppAddress && suppGender && suppYearOfBirth && suppPhone){
+        pool.query(model.readSupporterById, [suppId], (err, result)=>{
+            if(result.rowCount > 0){
+                pool.query(model.updateInforSupporter, [suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone, suppId], (error, result)=>{
+                    if(error) res.send(responseSupporterObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
+                    res.send(responseSupporterObject(200,"Cập nhật thông tin thành công"))
+                })
+            }
+            else    
+                res.send(responseSupporterObject(400,"Không tìm thấy người này trong hệ thống"))
+        })
+    }else{
 
-const changePassSupporter = (req, res, result)=>{
+    }
+}
+const updateSupporterByAdmin = (req, res, result)=>{
     var suppId = req.params.suppId;
-    var {memberPass} = req.body;
-    pool.query(model.readSupporterById, [suppId], (err, result)=>{
-        if(result.rowCount > 0){
-            pool.query(model.changePassSupporter, [md5(suppPass), suppId], (error, results)=>{
-                res.send(responseSupporterObject(200,"Cập nhật mật khẩu thành công"))
-            })
-        }
-        else    
-            res.send(responseSupporterObject(400,"Không tìm thấy người này trong hệ thống"))
-    })
+    var {suppEmail, suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone} = req.body;
+    console.log("update", suppEmail, suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone)
+    
+    if(suppEmail&& suppName && suppAddress && suppGender && suppYearOfBirth){
+        pool.query(model.readSupporterById, [suppId], (err, result)=>{
+            if(result.rowCount > 0){
+                pool.query(model.updateSupporterByAdmin, [suppName, suppAddress, suppGender, suppYearOfBirth, suppPhone, suppEmail, suppId], (error, result)=>{
+                    if(error) res.send(responseSupporterObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
+                    res.send(responseSupporterObject(200,"Cập nhật thông tin thành công"))
+                })
+            }
+            else    
+                res.send(responseSupporterObject(400,"Không tìm thấy người này trong hệ thống"))
+        })
+    }else{
+        res.send(responseSupporterObject(400,"Tham số truyền vào chưa đúng"))
+    }
+}
+const changePassSupporter = (req, res, result)=>{
+    var {oldPass, newPass, suppId} = req.body;
+    if(oldPass, newPass, parseInt(suppId)){
+        pool.query(model.readSupporterById, [suppId], (err, result)=>{
+            if(result.rowCount > 0){
+                pool.query(model.checkPassword, [md5(oldPass), suppId], (err, result)=>{
+                    if(result.rowCount > 0){
+                        pool.query(model.changePassSupporter, [md5(newPass), suppId], (err, result)=>{
+                            if(result.rowCount > 0){
+                                res.send(responseSupporterObject(200,"Thay đổi mật khẩu thành công"))
+                            }
+                            else res.send(responseSupporterObject(400,"Đã có lỗi xảy ra"))
+                        })
+                    }
+                    else res.send(responseSupporterObject(400,"Mật khẩu cũ chưa đúng"))
+                })
+            }
+            else res.send(responseSupporterObject(400,"Không tìm thấy người này trong hệ thống"))
+        })
+
+    }else{
+        res.send(responseSupporterObject(400,"Tham số truyền vào chưa đúng"))
+    }
 }
 const deleteSupporter = (req, res, result)=>{
     var suppId = req.params.suppId;
-    pool.query(model.readSupporterById, [suppId], (err, result)=>{
-        if(result.rowCount > 0){
-            pool.query(model.deleteSupporter, [suppId], (error, results)=>{
-                res.send(responseSupporterObject(200, "Xóa thành công"));
-            })
-        }
-        else    
-            res.send(responseSupporterObject(400,"Không tìm thấy người này trong hệ thống"));
-    })
+    if(parseInt(suppId)){
+        pool.query(model.readSupporterById, [suppId], (err, result)=>{
+            if(result.rowCount > 0){
+                pool.query(model.deleteSupporter, [suppId], (error, results)=>{
+                    res.send(responseSupporterObject(200, "Xóa thành công"));
+                })
+            }
+            else    
+                res.send(responseSupporterObject(400,"Không tìm thấy người này trong hệ thống"));
+        })
+    }
+    else    
+        res.send(responseSupporterObject(400,"Tham số truyền vào chưa đúng"))
 }
 
-module.exports = {loginSupporter, getSupporter, getSupporterById, getSupporterById, addSupporter, updateSupporter, changePassSupporter, deleteSupporter};
+module.exports = {updateSupporterByAdmin, loginSupporter, getSupporter, getSupporterById, getSupporterById, addSupporter, updateSupporter, changePassSupporter, deleteSupporter};

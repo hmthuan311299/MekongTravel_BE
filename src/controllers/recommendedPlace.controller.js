@@ -28,7 +28,6 @@ const getUnapprovedListByMemberId = (req, res) =>{
     else{
         res.send(responseRecommendedObject(400, noti_error));
     }
-    
 }
 const getApprovedListByMemberId = (req, res) =>{
     var {memberId} = req.query;
@@ -46,7 +45,7 @@ const getRecomendedPlaceById = (req, res) =>{
     var {recommendId} = req.params;
     // console.log(recommendId)
     if(recommendId){
-        pool.query(model.checkRecommendedPlaceByID, [recommendId], (error, result)=>{
+        pool.query(model.readRecommendedPlaceById, [recommendId], (error, result)=>{
             if(error || result.rowCount == 0){
                 res.send(responseRecommendedObject(200, "Không tìm thấy địa điểm này trong hệ thống"));
             }
@@ -76,13 +75,13 @@ const addRecommendedPlace = (req, res)=>{
 const deleteRecomendedPlace = (req, res)=>{
     var recommedId = req.params.recommedId;
     if(recommedId){
-        pool.query(model.deleteRecommendedPlace, [recommedId], (error, result)=>{
+        pool.query(model.checkRecommendedPlaceByID, [recommedId], (error, result)=>{
             if(error) res.send(responseRecommendedObject(400, noti_error));
             if(result.rowCount == 0){
                 res.send(responseRecommendedObject(400, "Không tìm địa điểm này"));
             }
             else{
-                pool.query(model.deleteTouristAtraction, [tourId],(error, result)=>{
+                pool.query(model.deleteRecommendedPlace, [recommedId],(error, result)=>{
                     if(error){
                         res.send(responseRecommendedObject(400, noti_error));
                     }
@@ -92,7 +91,38 @@ const deleteRecomendedPlace = (req, res)=>{
         })
     }
     else{
+        res.send(responseRecommendedObject(400, "Tham số truyền vào chưa đúng"));
+    }
+}
+const updateStatusRecommended= (req, res)=>{
+    var id = req.params.id;
+    var {recommendTitle, recommendDesc, recommendAddress, provinceId} = req.body;
+    console.log(id, recommendTitle, recommendDesc, recommendAddress, provinceId)
+    if(id && recommendTitle && recommendDesc && recommendAddress && provinceId){
+        var convertTourTitle = titleCase(recommendTitle.trim());
+        pool.query(model.updateStatusRecommended, [convertTourTitle, recommendDesc, recommendAddress, provinceId,'Đã phê duyệt', id], (error, result)=>{
+            if(error) res.send(responseRecommendedObject(400, noti_error));
+            else res.send(responseRecommendedObject(200, "Cập nhật thành công"));
+        })
+    }
+    else{
         res.send(responseRecommendedObject(400, noti_error));
+    }
+}
+const updateStatusRecommendedHavePicture= (req, res)=>{
+    var path = req.file.path;
+    var id = req.params.id;
+    var {recommendTitle, recommendDesc, recommendAddress, provinceId} = req.body;
+    console.log(id, recommendTitle, recommendDesc, recommendAddress)
+    if(id && recommendTitle && recommendDesc && recommendAddress && provinceId){
+        var convertTourTitle = titleCase(recommendTitle.trim());
+        pool.query(model.updateStatusRecommendedHavePicture, [convertTourTitle, recommendDesc, recommendAddress, provinceId, path,'Đã phê duyệt', id], (error, result)=>{
+            if(error) res.send(responseRecommendedObject(400, noti_error));
+            else res.send(responseRecommendedObject(200, "Cập nhật thành công"));
+        })
+    }
+    else{
+        res.send(responseTouristObject(400, noti_error));
     }
 }
 module.exports = {
@@ -102,5 +132,7 @@ module.exports = {
     deleteRecomendedPlace,
     getUnapprovedList,
     getUnapprovedListByMemberId,
-    getApprovedListByMemberId
+    getApprovedListByMemberId,
+    updateStatusRecommended,
+    updateStatusRecommendedHavePicture
 }

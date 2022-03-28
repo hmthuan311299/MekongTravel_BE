@@ -6,7 +6,8 @@ var dirName = "./src/public"
 const upload  = multer({ dest: dirName+ '/imgTourist'})
 
 router.get('/getimage/:tourId', controller.getImageByTourId)
-router.post('/addImage', upload.array('photos', 10), controller.addImageTA)
-router.delete('/deleteImage/:imageId', controller.deleteImageById)
+router.post('/add', upload.array('photos', 10), controller.addImageTA)
+router.post('/approval', controller.approval)
+router.delete('/delete/:imageId', controller.deleteImageById)
 
 module.exports = router;

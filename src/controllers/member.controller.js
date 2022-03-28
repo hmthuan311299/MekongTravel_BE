@@ -90,7 +90,7 @@ const changePassMember = (req, res, result)=>{
     if(oldPass, newPass, parseInt(memberId)){
         pool.query(model.readMemberById, [memberId], (err, result)=>{
             if(result.rowCount > 0){
-                pool.query(model.checkUserPassWord, [md5(oldPass), memberId], (err, result)=>{
+                pool.query(model.checkPassword, [md5(oldPass), memberId], (err, result)=>{
                     if(result.rowCount > 0){
                         pool.query(model.changePassMember, [md5(newPass), memberId], (err, result)=>{
                             if(result.rowCount > 0){
@@ -99,14 +99,14 @@ const changePassMember = (req, res, result)=>{
                             else res.send(responseMemberObject(400,"Đã có lỗi xảy ra"))
                         })
                     }
-                    else res.send(responseMemberObject(400,"Mật khẩu không hợp lệ"))
+                    else res.send(responseMemberObject(400,"Mật khẩu cũ chưa đúng"))
                 })
             }
             else res.send(responseMemberObject(400,"Không tìm thấy người này trong hệ thống"))
         })
 
     }else{
-
+        res.send(responseMemberObject(400,"Tham số truyền vào chưa đúng"))
     }
 }
 const deleteMember = (req, res, result)=>{

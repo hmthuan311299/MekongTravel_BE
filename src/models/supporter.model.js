@@ -7,7 +7,8 @@ var insertSupporter        = "INSERT INTO supporter(suppEmail, suppPass, suppNam
 var updateInforSupporter   = "UPDATE supporter SET suppname = $1, suppAddress=$2, suppGender=$3, suppYearofBirth=$4, suppphone=$5 WHERE suppID = $6";
 var changePassSupporter    = "UPDATE supporter SET suppPass = $1 WHERE suppID = $2";
 var deleteSupporter        = "DELETE FROM supporter WHERE suppID = $1";
-
+var checkPassword          = "Select * from supporter where supppass = $1 and suppID = $2";
+var updateSupporterByAdmin = "UPDATE supporter SET suppname = $1, suppAddress=$2, suppGender=$3, suppYearofBirth=$4, suppphone=$5, suppEmail = $6 WHERE suppID = $7";
 module.exports = {
     readSupporter,
     readSupporterById,
@@ -17,6 +18,8 @@ module.exports = {
     insertSupporter,
     updateInforSupporter,
     changePassSupporter,
-    deleteSupporter
+    deleteSupporter,
+    updateSupporterByAdmin,
+    checkPassword
 
 }

@@ -6,10 +6,15 @@ const noti_error = 'Đã có lỗi xảy ra';
 
 const getImageByRecommendId = (req, res) =>{
     var {recommendId} = req.params;
-    pool.query(model.readRecommendImageByID, [recommendId], (error, result)=>{
-        if(error) throw error;
-        res.send(responseIMGTouristObject(200, noti_success, result.rows));
-    })
+    if(recommendId){
+        pool.query(model.readRecommendImageByID, [recommendId], (error, result)=>{
+            if(error) throw error;
+            res.send(responseIMGTouristObject(200, noti_success, result.rows));
+        })
+    }else{
+        res.send(responseIMGTouristObject(400, "Tham số truyền vào chưa đúng"));
+    }
+    
 }
 const addImageRecommended = (req, res)=>{
     var {recommendId} = req.body;
