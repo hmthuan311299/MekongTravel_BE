@@ -15,5 +15,5 @@ module.exports = {
     checkNameProvince,
     checkProvinceByID,
     readProvinceById,
-    updateProvinceHavePicture
+    updateProvinceHavePicture,
 }

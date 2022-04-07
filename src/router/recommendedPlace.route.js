@@ -3,7 +3,7 @@ var router = express.Router();
 var controller = require('../controllers/recommendedPlace.controller');
 const multer  = require('multer')
 var dirName = "src/public"
-const upload  = multer({ dest: dirName + '/tourPicture'})
+const upload  = multer({ dest: dirName + '/avatarTourist'})
 
 router.get('/', controller.getAllRecomendedPlace)
 router.get('/approvedListByMemberId', controller.getApprovedListByMemberId)
@@ -14,4 +14,5 @@ router.post('/add', upload.single('avatar'), controller.addRecommendedPlace)
 router.put('/approvedBySupporter/:id', controller.updateStatusRecommended)
 router.put('/approvedBySupporterHavePicture/:id', upload.single('avatar'), controller.updateStatusRecommendedHavePicture)
 router.delete('/delete/:recommendId', controller.deleteRecomendedPlace)
+router.delete('/deleteByMemberId/:memberId', controller.deleteRecomendedPlaceByMemberId)
 module.exports = router;

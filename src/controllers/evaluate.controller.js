@@ -12,24 +12,45 @@ const getEvaluate = (req, res) =>{
         }
     })
 }
-const addEvaluate = (req, res, result)=>{
-    var {evaluateStar, evaluateContent, createAt, memberId, tourId} = req.body;
-    console.log({evaluateStar, evaluateContent, createAt, memberId, tourId})
-    pool.query(model.insertEvaluate,[evaluateStar, evaluateContent, createAt, memberId, tourId], (error, results)=>{
-        if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"));
-        else res.send(responseEvaluateObject(200,"Đánh giá thành công"))
+const getCurrentEvaluate = (req, res) =>{
+    var {tourId, memberId} = req.query;
+    pool.query(model.readCurrentEvaluate, [tourId, memberId], (err, result) => {
+        if (err) {
+            res.json(responseEvaluateObject(400,'Truy vấn thất bại'));
+        }
+        else if (result.rowCount == 0) {
+            res.json(responseEvaluateObject(400,'Người dùng chưa đánh giá địa điểm này', []));
+        }
+         else {
+            res.json(responseEvaluateObject(200,'Kết nối thành công', result.rows[0]));
+        }
     })
 }
+const addEvaluate = (req, res, result)=>{
+    var {evaluateStar, evaluateContent, createAt, memberId, tourId} = req.body;
+    if(memberId && tourId && evaluateStar && evaluateContent){
+        pool.query(model.insertEvaluate,[evaluateStar, evaluateContent, createAt, memberId, tourId], (error, results)=>{
+            if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"));
+            else res.send(responseEvaluateObject(200,"Đánh giá thành công"))
+        })
+    }else{
+        res.json(responseEvaluateObject(400,'Truy vấn thất bại'));
+    }
+    
+}
 const updateEvaluate = (req, res, result)=>{
-    var {memberid, tourid, evaluteStar, evaluteContent, createAt} = req.body;
-    pool.query(model.updateEvaluate, [evaluteStar, evaluteContent, memberid, tourid], (error, result)=>{
-        if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
-        res.send(responseEvaluateObject(200,"Cập nhật thành công"))
-    })
+    var {memberId, tourId, evaluateStar, evaluateContent} = req.body;
+    if(memberId && tourId && evaluateStar && evaluateContent){
+        pool.query(model.updateEvaluate, [evaluateStar, evaluateContent, memberId, tourId], (error, result)=>{
+            if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
+            res.send(responseEvaluateObject(200,"Cập nhật thành công"))
+        })
+    }else{
+        res.json(responseEvaluateObject(400,'Truy vấn thất bại'));
+    }
 }
 const checkEvaluate = (req, res)=>{
     var {memberId, tourId} = req.query;
-    console.log(memberId, tourId);
     if(memberId){
         pool.query(model.checkEvaluate, [memberId, tourId], (error, result)=>{
             if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
@@ -44,15 +65,18 @@ const checkEvaluate = (req, res)=>{
     else{
         res.json(responseEvaluateObject(400,'Truy vấn thất bại'));
     }
-    
-    
 }
 const deleteEvaluate = (req, res, result)=>{
     var {memberId, tourId} = req.body;
-    pool.query(model.deleteEvaluate, [memberId, tourId], (error, results)=>{
-        if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"))
-        res.send(responseEvaluateObject(200,"Xóa thành công"))
-    })
+    if(memberId && tourId){
+        pool.query(model.deleteEvaluate, [memberId, tourId], (error, results)=>{
+            if(error) res.send(responseEvaluateObject(400,"Đã xảy ra lỗi trong hệ thống, vui lòng thao tác lại sau"));
+            else res.send(responseEvaluateObject(200,"Xóa thành công"))
+        })
+    }else{
+        res.json(responseEvaluateObject(400,'Truy vấn thất bại'));
+    }
+    
 }
 module.exports = 
 {
@@ -60,5 +84,6 @@ module.exports =
     addEvaluate,
     updateEvaluate,
     deleteEvaluate,
-    checkEvaluate
+    checkEvaluate,
+    getCurrentEvaluate
 };

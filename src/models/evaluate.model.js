@@ -3,6 +3,7 @@ var insertEvaluate    = "INSERT INTO evaluate(evaluateStar, evaluateContent, cre
 var updateEvaluate    = "UPDATE evaluate SET evaluateStar=$1, evaluateContent=$2 WHERE memberid = $3 and tourid=$4";
 var deleteEvaluate    = "DELETE FROM evaluate WHERE memberid = $1 and tourid = $2";
 var checkEvaluate    = "select * FROM evaluate WHERE memberid = $1 and tourid = $2";
+var readCurrentEvaluate = "SELECT distinct a.*, b.memberName, b.memberAvatar FROM evaluate a, member b, touristAttraction c where a.memberid = b.memberid and a.tourid = c.tourid and a.tourid= $1 and b.memberid= $2";
 module.exports = {
-    readEvaluate, insertEvaluate, updateEvaluate, deleteEvaluate, checkEvaluate
+    readEvaluate, insertEvaluate, updateEvaluate, deleteEvaluate, checkEvaluate, readCurrentEvaluate
 }

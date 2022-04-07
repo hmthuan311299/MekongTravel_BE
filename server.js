@@ -21,6 +21,7 @@ var recommededPlace = require('./src/router/recommendedPlace.route')
 var imgRecommeded = require('./src/router/imgRecommended')
 var countViewRoute = require('./src/router/view.route')
 var statisticRoute = require('./src/router/statistic.route')
+var replyCommentRoute = require('./src/router/replyComment.route')
 app.use(function (req, res, next) { 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -45,6 +46,7 @@ app.use('/recommendedPlace', recommededPlace)
 app.use('/imgRecommended', imgRecommeded)
 app.use('/view', countViewRoute)
 app.use('/statistic', statisticRoute)
+app.use('/replyComment', replyCommentRoute)
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

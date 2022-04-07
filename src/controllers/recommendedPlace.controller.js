@@ -73,21 +73,35 @@ const addRecommendedPlace = (req, res)=>{
     }
 }
 const deleteRecomendedPlace = (req, res)=>{
-    var recommedId = req.params.recommedId;
-    if(recommedId){
-        pool.query(model.checkRecommendedPlaceByID, [recommedId], (error, result)=>{
+    var recommendId = req.params.recommendId;
+    if(recommendId){
+        pool.query(model.checkRecommendedPlaceByID, [recommendId], (error, result)=>{
             if(error) res.send(responseRecommendedObject(400, noti_error));
             if(result.rowCount == 0){
                 res.send(responseRecommendedObject(400, "Không tìm địa điểm này"));
             }
             else{
-                pool.query(model.deleteRecommendedPlace, [recommedId],(error, result)=>{
+                pool.query(model.deleteRecommendedPlace, [recommendId],(error, result)=>{
                     if(error){
                         res.send(responseRecommendedObject(400, noti_error));
                     }
-                    res.send(responseRecommendedObject(200, "Xóa thành công"));
+                    else res.send(responseRecommendedObject(200, "Xóa thành công"));
                 })
             }
+        })
+    }
+    else{
+        res.send(responseRecommendedObject(400, "Tham số truyền vào chưa đúng"));
+    }
+}
+const deleteRecomendedPlaceByMemberId = (req, res)=>{
+    var memberId = req.params.memberId;
+    if(memberId){
+        pool.query(model.deleteRecommendedPlaceByMemberId, [memberId],(error, result)=>{
+            if(error){
+                res.send(responseRecommendedObject(400, noti_error));
+            }
+            else res.send(responseRecommendedObject(200, "Xóa thành công"));
         })
     }
     else{
@@ -134,5 +148,6 @@ module.exports = {
     getUnapprovedListByMemberId,
     getApprovedListByMemberId,
     updateStatusRecommended,
-    updateStatusRecommendedHavePicture
+    updateStatusRecommendedHavePicture,
+    deleteRecomendedPlaceByMemberId
 }

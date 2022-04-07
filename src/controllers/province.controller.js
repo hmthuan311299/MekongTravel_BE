@@ -108,7 +108,10 @@ const deleteProvince = (req, res)=>{
         })
     }
 }
-module.exports = {getProvince, addProvince, updateProvince, deleteProvince, getProvinceById, updateProvinceHavePicture}
+
+module.exports = {   
+    getProvince, addProvince, updateProvince, deleteProvince, getProvinceById, updateProvinceHavePicture,
+}
 
 
 

@@ -8,7 +8,7 @@ var readApprovedListByMemberId = "SELECT a.*, b.provinceTitle, c.memberName FROM
 var readUnapprovedList = "SELECT a.*, b.provinceTitle, c.memberName FROM recommendedPlace a, province b, member c where a.provinceid = b.provinceid and a.memberid = c.memberid and status='Đang xem xét'";
 var updateStatusRecommended = "update recommendedPlace set recommendtitle = $1, recommenddesc = $2, recommendaddress = $3, provinceid = $4, status= $5 where recommendid = $6"
 var updateStatusRecommendedHavePicture = "update recommendedPlace set recommendtitle = $1, recommenddesc = $2, recommendaddress = $3, provinceid = $4, recommendpicture = $5, status= $6 where recommendid = $7"
-
+var deleteRecommendedPlaceByMemberId = "DELETE FROM recommendedPlace WHERE memberId = $1 and status='Đang xem xét'"
 module.exports = {
     readAllRecommendedPlace,
     readRecommendedPlaceById,
@@ -19,5 +19,6 @@ module.exports = {
     readApprovedListByMemberId,
     readUnapprovedList,
     updateStatusRecommended,
-    updateStatusRecommendedHavePicture
+    updateStatusRecommendedHavePicture,
+    deleteRecommendedPlaceByMemberId
 }

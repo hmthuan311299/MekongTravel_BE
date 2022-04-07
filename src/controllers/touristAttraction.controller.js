@@ -54,22 +54,26 @@ const getTouristAttactionBySearch = (req, res) =>{
 const addTouristAttaction = (req, res)=>{
     var path = req.file.path;
     var {tourId, tourTitle, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId} = req.body;
-    var convertTourTitle = titleCase(tourTitle.trim());
-    pool.query(model.checkNameTourist, [convertTourTitle], (error, result)=>{
-        if(error){
-            res.send(responseTouristObject(400, noti_error));
-        }
-        if(result.rowCount > 0){
-            res.send(responseTouristObject(400, 'Tỉnh thành này đã tồn tại trong hệ thống'));
-        }
-        else{
-            pool.query(model.addTouristAttraction, [tourId, tourTitle, path, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId], (error, result)=>{
-                if(error) res.send(responseTouristObject(400, noti_error));
-                res.send(responseTouristObject(200, "Thêm thành công"));
-            })
-            
-        }
-    })
+    if(tourId && tourTitle && tourDesc && tourAddress && tourLinkMap && provinceId){
+        var convertTourTitle = titleCase(tourTitle.trim());
+        pool.query(model.checkNameTourist, [convertTourTitle], (error, result)=>{
+            if(error){
+                res.send(responseTouristObject(400, noti_error));
+            }
+            if(result.rowCount > 0){
+                res.send(responseTouristObject(400, 'Tỉnh thành này đã tồn tại trong hệ thống'));
+            }
+            else{
+                pool.query(model.addTouristAttraction, [tourId, tourTitle, path, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId], (error, result)=>{
+                    if(error) res.send(responseTouristObject(400, noti_error));
+                    else res.send(responseTouristObject(200, "Thêm thành công"));
+                })
+                
+            }
+        })
+    }else{
+        res.send(responseTouristObject(400, "Tham số truyền vào chưa đúng"));
+    }
 }
 const approvalTA = (req, res)=>{
     var {tourId, path, tourTitle, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId} = req.body;
@@ -93,44 +97,55 @@ const approvalTA = (req, res)=>{
 }
 const updateTouristAttaction = (req, res)=>{
     var tourId = req.params.tourId;
-    pool.query(model.checkTouristByID, [tourId], (error, result)=>{
-        if(error) res.send(responseTouristObject(400, noti_error));
-        if(result.rowCount == 0){
-            res.send(responseTouristObject(400, "Không tìm thấy Tỉnh Thành này"));
-        }
-        else{ 
-            var {tourTitle, tourDesc, tourAddress, tourMap, tourLinkVideo, provinceId} = req.body;
-            console.log(req.body)
-            var convertTourTitle = titleCase(tourTitle.trim());
-            pool.query(model.updateTouristAtraction, [convertTourTitle, tourDesc, tourAddress, tourMap, tourLinkVideo, provinceId, tourId],(error, result)=>{
-                if(error){
-                    res.send(responseTouristObject(400, noti_error));
-                }
-                res.send(responseTouristObject(200, "Cập nhật thành công"));
-            })
-        }
-    })
+    var {tourTitle, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId} = req.body;
+    if(tourId && tourTitle && tourDesc && tourAddress && tourLinkMap && provinceId){
+        pool.query(model.checkTouristByID, [tourId], (error, result)=>{
+            if(error) res.send(responseTouristObject(400, noti_error));
+            if(result.rowCount == 0){
+                res.send(responseTouristObject(400, "Không tìm thấy địa điểm này"));
+            }
+            else{ 
+                //var {tourTitle, tourDesc, tourAddress, tourMap, tourLinkVideo, provinceId} = req.body;
+                console.log(req.body)
+                var convertTourTitle = titleCase(tourTitle.trim());
+                pool.query(model.updateTouristAtraction, [convertTourTitle, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId, tourId],(error, result)=>{
+                    if(error){
+                        res.send(responseTouristObject(400, noti_error));
+                    }
+                    res.send(responseTouristObject(200, "Cập nhật thành công"));
+                })
+            }
+        })
+    }else{
+        res.send(responseTouristObject(400, "Tham số truyền vào chưa đúng"));
+    }
 }
 const updateTouristAttactionHavePicture = (req, res)=>{
-    var path = appRoot+ req.file.path;
+    var path = req.file.path;
     console.log(path)
     var tourId = req.params.tourId;
-    pool.query(model.checkTouristByID, [tourId], (error, result)=>{
-        if(error) res.send(responseTouristObject(400, noti_error));
-        if(result.rowCount == 0){
-            res.send(responseTouristObject(400, "Không tìm thấy Tỉnh Thành này"));
-        }
-        else{
-            var {tourId, tourTitle, tourDesc, tourAddress, tourMap, tourLinkVideo, provinceId} = req.body;
-            var convertTourTitle = titleCase(tourTitle.trim());
-            pool.query(model.updateTouristAtractionHavePicture, [convertTourTitle, tourDesc, tourAddress, tourMap, tourLinkVideo, provinceId, path, tourId],(error, result)=>{
-                if(error){
-                    res.send(responseTouristObject(400, noti_error));
-                }
-                res.send(responseTouristObject(200, "Cập nhật thành công"));
-            })
-        }
-    })
+    var {tourTitle, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId} = req.body;
+    console.log(tourId, tourTitle, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId)
+    if(tourId && tourTitle && tourDesc && tourAddress && tourLinkMap && provinceId){
+        pool.query(model.checkTouristByID, [tourId], (error, result)=>{
+            if(error) res.send(responseTouristObject(400, noti_error));
+            if(result.rowCount == 0){
+                res.send(responseTouristObject(400, "Không tìm thấy Tỉnh Thành này"));
+            }
+            else{
+                var convertTourTitle = titleCase(tourTitle.trim());
+                pool.query(model.updateTouristAtractionHavePicture, [convertTourTitle, tourDesc, tourAddress, tourLinkMap, tourLinkVideo, provinceId, path, tourId],(error, result)=>{
+                    if(error){
+                        res.send(responseTouristObject(400, noti_error));
+                    }
+                    else res.send(responseTouristObject(200, "Cập nhật thành công"));
+                })
+            }
+        })
+    }else{
+        res.send(responseTouristObject(400, "Tham số truyền vào chưa đúng"));
+    }
+    
 }
 const deleteTouristAttaction = (req, res)=>{
     var tourId = req.params.tourId;
@@ -149,6 +164,27 @@ const deleteTouristAttaction = (req, res)=>{
         }
     })
 }
+const rankTAByProvince = (req, res) =>{
+    var {provinceId} = req.params;
+    console.log(provinceId)
+    if(provinceId){
+        pool.query(model.rankTAByProvince, [provinceId], (error, result)=>{
+            res.send(responseTouristObject(200, noti_success, result.rows));
+        })
+    }else{
+        res.send(responseTouristObject(400, "Tham số truyền vào chưa đúng"));
+    }
+}
+const suggestionTAByProvince = (req, res) =>{
+    var {provinceId} = req.params;
+    if(provinceId){
+        pool.query(model.suggestionTAByProvince, [provinceId], (error, result)=>{
+            res.send(responseTouristObject(200, noti_success, result.rows));
+        })
+    }else{
+        res.send(responseTouristObject(400, "Tham số truyền vào chưa đúng"));
+    }
+}
 module.exports = {
     getAllTouristAttaction,
     getTouristAttactionByProvinceId,
@@ -158,5 +194,7 @@ module.exports = {
     deleteTouristAttaction,
     getTouristAttactionById,
     getTouristAttactionBySearch,
-    approvalTA
+    approvalTA,
+    rankTAByProvince,
+    suggestionTAByProvince
 }
